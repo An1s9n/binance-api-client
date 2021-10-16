@@ -16,13 +16,26 @@
     <maven.compiler.release>17</maven.compiler.release>
     <!--SPRING-->
     <spring-boot-dependencies.version>2.5.5</spring-boot-dependencies.version>
+    <!--UTIL-->
+    <lombok.version>1.18.22</lombok.version>
   </properties>
 
   <dependencies>
     <!--SPRING-->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webflux</artifactId>
+    </dependency>
+    <!--UTIL-->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
