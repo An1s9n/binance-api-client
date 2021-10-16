@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import ru.an1s9n.binanceapiclient.model.config.BinanceApiConfig;
+import ru.an1s9n.binanceapiclient.config.BinanceApiConfig;
 
 public class BinanceApiClientFactory {
 
