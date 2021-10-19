@@ -1,6 +1,6 @@
 package ru.an1s9n.binanceapiclient;
 
-public interface BinanceApiRestClient {
+public interface BinanceApiSimpleClient {
 
   Long getServerTime();
 
