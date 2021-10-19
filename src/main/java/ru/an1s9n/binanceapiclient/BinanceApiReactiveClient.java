@@ -4,6 +4,7 @@ import reactor.core.publisher.Mono;
 
 public interface BinanceApiReactiveClient {
 
+  Mono<Void> ping();
   Mono<Long> getServerTime();
 
 }

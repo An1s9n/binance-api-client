@@ -5,7 +5,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
 
-import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.Endpoints.SERVER_TIME_ENDPOINT;
+import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.Endpoints.*;
 
 @RequiredArgsConstructor
 public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
@@ -15,6 +15,12 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   private final String secret;
 
   //TODO: handle errors
+
+
+  @Override
+  public Mono<Void> ping() {
+    return webClient.get().uri(PING_ENDPOINT).retrieve().bodyToMono(Void.class);
+  }
 
   @Override
   public Mono<Long> getServerTime() {

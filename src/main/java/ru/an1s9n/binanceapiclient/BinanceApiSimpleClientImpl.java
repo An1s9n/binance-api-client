@@ -9,6 +9,11 @@ public class BinanceApiSimpleClientImpl implements BinanceApiSimpleClient {
   private final BinanceApiReactiveClient reactiveClient;
 
   @Override
+  public void ping() {
+    reactiveClient.ping().blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
+  }
+
+  @Override
   public Long getServerTime() {
     return reactiveClient.getServerTime().blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
