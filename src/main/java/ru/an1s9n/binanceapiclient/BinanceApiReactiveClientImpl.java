@@ -3,6 +3,7 @@ package ru.an1s9n.binanceapiclient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
 
 import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.Endpoints.*;
@@ -25,6 +26,11 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   @Override
   public Mono<Long> getServerTime() {
     return webClient.get().uri(SERVER_TIME_ENDPOINT).retrieve().bodyToMono(ServerTime.class).flatMap(st -> Mono.just(st.getServerTime()));
+  }
+
+  @Override
+  public Mono<ExchangeInfo> getExchangeInfo() {
+    return webClient.get().uri(EXCHANGE_INFO_ENDPOINT).retrieve().bodyToMono(ExchangeInfo.class);
   }
 
 }

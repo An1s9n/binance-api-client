@@ -16,6 +16,7 @@ public class BinanceApiConfig {
   public static class Endpoints {
     public static final String PING_ENDPOINT = "/api/v3/ping";
     public static final String SERVER_TIME_ENDPOINT = "/api/v3/time";
+    public static final String EXCHANGE_INFO_ENDPOINT = "/api/v3/exchangeInfo";
   }
 
 }
