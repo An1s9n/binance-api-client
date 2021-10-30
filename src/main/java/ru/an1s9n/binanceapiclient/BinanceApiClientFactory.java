@@ -32,11 +32,11 @@ public class BinanceApiClientFactory {
     return new BinanceApiReactiveClientImpl(webClient, null, null);
   }
 
-  public static BinanceApiSimpleClient getBinanceApiRestClient(String apiKey, String secret) {
+  public static BinanceApiSimpleClient getBinanceApiSimpleClient(String apiKey, String secret) {
     return new BinanceApiSimpleClientImpl(getBinanceApiReactiveClient(apiKey, secret));
   }
 
-  public static BinanceApiSimpleClient getBinanceApiRestClient() {
+  public static BinanceApiSimpleClient getBinanceApiSimpleClient() {
     return new BinanceApiSimpleClientImpl(getBinanceApiReactiveClient());
   }
 

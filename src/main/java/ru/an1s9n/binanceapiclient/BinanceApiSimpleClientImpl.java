@@ -3,6 +3,7 @@ package ru.an1s9n.binanceapiclient;
 import lombok.RequiredArgsConstructor;
 import ru.an1s9n.binanceapiclient.exception.BinanceApiException;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
+import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 
 import java.util.List;
 
@@ -34,6 +35,11 @@ public class BinanceApiSimpleClientImpl implements BinanceApiSimpleClient {
   @Override
   public ExchangeInfo getExchangeInfo(List<String> symbols) {
     return reactiveClient.getExchangeInfo(symbols).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
+  }
+
+  @Override
+  public OrderBook getOrderBook(String symbol, int limit) {
+    return reactiveClient.getOrderBook(symbol, limit).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 
 }

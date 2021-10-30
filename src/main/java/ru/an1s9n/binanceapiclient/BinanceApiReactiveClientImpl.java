@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
+import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
 
 import java.util.List;
@@ -43,13 +44,26 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   @Override
   public Mono<ExchangeInfo> getExchangeInfo(List<String> symbols) {
     return webClient.get()
-      .uri(builder -> builder
+      .uri(uriBuilder -> uriBuilder
         .path(EXCHANGE_INFO_ENDPOINT)
         .queryParam("symbols", prepareSymbolsString(symbols))
         .build()
       )
       .retrieve()
       .bodyToMono(ExchangeInfo.class);
+  }
+
+  @Override
+  public Mono<OrderBook> getOrderBook(String symbol, int limit) {
+    return webClient.get()
+      .uri(uriBuilder -> uriBuilder
+        .path(ORDER_BOOK_ENDPOINT)
+        .queryParam("symbol", symbol.toUpperCase())
+        .queryParam("limit", limit)
+        .build()
+      )
+      .retrieve()
+      .bodyToMono(OrderBook.class);
   }
 
   private String prepareSymbolsString(List<String> symbols) {
