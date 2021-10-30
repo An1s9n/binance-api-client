@@ -6,6 +6,9 @@ import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.Endpoints.*;
 
 @RequiredArgsConstructor
@@ -16,7 +19,6 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   private final String secret;
 
   //TODO: handle errors
-
 
   @Override
   public Mono<Void> ping() {
@@ -31,6 +33,31 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   @Override
   public Mono<ExchangeInfo> getExchangeInfo() {
     return webClient.get().uri(EXCHANGE_INFO_ENDPOINT).retrieve().bodyToMono(ExchangeInfo.class);
+  }
+
+  @Override
+  public Mono<ExchangeInfo> getExchangeInfo(String symbol) {
+    return getExchangeInfo(List.of(symbol));
+  }
+
+  @Override
+  public Mono<ExchangeInfo> getExchangeInfo(List<String> symbols) {
+    return webClient.get()
+      .uri(builder -> builder
+        .path(EXCHANGE_INFO_ENDPOINT)
+        .queryParam("symbols", prepareSymbolsString(symbols))
+        .build()
+      )
+      .retrieve()
+      .bodyToMono(ExchangeInfo.class);
+  }
+
+  private String prepareSymbolsString(List<String> symbols) {
+    return symbols
+      .stream()
+      .map(String::toUpperCase)
+      .map(it -> "\"" + it + "\"")
+      .collect(Collectors.joining(",", "[", "]"));
   }
 
 }
