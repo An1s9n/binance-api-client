@@ -18,6 +18,7 @@ public class BinanceApiConfig {
     public static final String SERVER_TIME_ENDPOINT = "/api/v3/time";
     public static final String EXCHANGE_INFO_ENDPOINT = "/api/v3/exchangeInfo";
     public static final String ORDER_BOOK_ENDPOINT = "/api/v3/depth";
+    public static final String RECENT_TRADES_ENDPOINT = "/api/v3/trades";
   }
 
 }

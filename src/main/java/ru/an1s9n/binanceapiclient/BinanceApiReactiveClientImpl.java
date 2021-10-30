@@ -1,11 +1,13 @@
 package ru.an1s9n.binanceapiclient;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
+import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -64,6 +66,19 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .bodyToMono(OrderBook.class);
+  }
+
+  @Override
+  public Mono<List<TradeItem>> getRecentTrades(String symbol, int limit) {
+    return webClient.get()
+      .uri(uriBuilder -> uriBuilder
+        .path(RECENT_TRADES_ENDPOINT)
+        .queryParam("symbol", symbol.toUpperCase())
+        .queryParam("limit", limit)
+        .build()
+      )
+      .retrieve()
+      .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
   private String prepareSymbolsString(List<String> symbols) {
