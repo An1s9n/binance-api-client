@@ -2,8 +2,10 @@ package ru.an1s9n.binanceapiclient;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import ru.an1s9n.binanceapiclient.exception.BinanceApiException;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
@@ -12,6 +14,7 @@ import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.API_KEY_HEADER;
 import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.Endpoints.*;
 
 @RequiredArgsConstructor
@@ -78,6 +81,22 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
         .build()
       )
       .retrieve()
+      .bodyToMono(new ParameterizedTypeReference<>() {});
+  }
+
+  @Override
+  public Mono<List<TradeItem>> getHistoricalTrades(String symbol, int limit, long fromId) {
+    return webClient.get()
+      .uri(uriBuilder -> uriBuilder
+        .path(HISTORICAL_TRADES_ENDPOINT)
+        .queryParam("symbol", symbol.toUpperCase())
+        .queryParam("limit", limit)
+        .queryParam("fromId", fromId)
+        .build()
+      )
+      .header(API_KEY_HEADER, apiKey)
+      .retrieve()
+      .onStatus(HttpStatus.UNAUTHORIZED::equals, response -> response.bodyToMono(BinanceApiException.class))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 

@@ -48,4 +48,9 @@ public class BinanceApiSimpleClientImpl implements BinanceApiSimpleClient {
     return reactiveClient.getRecentTrades(symbol, limit).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 
+  @Override
+  public List<TradeItem> getHistoricalTrades(String symbol, int limit, long fromId) {
+    return reactiveClient.getHistoricalTrades(symbol, limit, fromId).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
+  }
+
 }
