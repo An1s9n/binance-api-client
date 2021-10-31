@@ -16,5 +16,6 @@ public interface BinanceApiSimpleClient {
   OrderBook getOrderBook(String symbol, int limit);
   List<TradeItem> getRecentTrades(String symbol, int limit);
   List<TradeItem> getHistoricalTrades(String symbol, int limit, long fromId);
+  List<TradeItem> getAggregateTrades (String symbol, long fromId, long startTime, long endTime, int limit);
 
 }

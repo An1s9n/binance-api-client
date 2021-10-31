@@ -17,5 +17,6 @@ public interface BinanceApiReactiveClient {
   Mono<OrderBook> getOrderBook(String symbol, int limit);
   Mono<List<TradeItem>> getRecentTrades(String symbol, int limit);
   Mono<List<TradeItem>> getHistoricalTrades(String symbol, int limit, long fromId);
+  Mono<List<TradeItem>> getAggregateTrades (String symbol, long fromId, long startTime, long endTime, int limit);
 
 }

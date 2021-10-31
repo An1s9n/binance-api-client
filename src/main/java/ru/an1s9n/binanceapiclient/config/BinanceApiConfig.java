@@ -6,9 +6,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BinanceApiConfig {
 
+  public static final String BASE_DOMAIN = "binance.com";
   public static final String API_KEY_HEADER = "X-MBX-APIKEY";
-
-  private static final String BASE_DOMAIN = "binance.com";
 
   public static String apiBaseUrl() {
     return "https://api.%s".formatted(BASE_DOMAIN);
@@ -22,6 +21,7 @@ public class BinanceApiConfig {
     public static final String ORDER_BOOK_ENDPOINT = "/api/v3/depth";
     public static final String RECENT_TRADES_ENDPOINT = "/api/v3/trades";
     public static final String HISTORICAL_TRADES_ENDPOINT = "/api/v3/historicalTrades";
+    public static final String AGGREGATE_TRADES_ENDPOINT = "/api/v3/aggTrades";
   }
 
 }

@@ -100,6 +100,11 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
+  @Override
+  public Mono<List<TradeItem>> getAggregateTrades(String symbol, long fromId, long startTime, long endTime, int limit) {
+    return null; // TODO
+  }
+
   private String prepareSymbolsString(List<String> symbols) {
     return symbols
       .stream()
