@@ -1,5 +1,6 @@
 package ru.an1s9n.binanceapiclient;
 
+import ru.an1s9n.binanceapiclient.model.market.AggregateTradeItem;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
@@ -16,6 +17,6 @@ public interface BinanceApiSimpleClient {
   OrderBook getOrderBook(String symbol, int limit);
   List<TradeItem> getRecentTrades(String symbol, int limit);
   List<TradeItem> getHistoricalTrades(String symbol, int limit, long fromId);
-  List<TradeItem> getAggregateTrades (String symbol, long fromId, long startTime, long endTime, int limit);
+  List<AggregateTradeItem> getAggregateTrades (String symbol, Long fromId, Long startTime, Long endTime, Integer limit);
 
 }

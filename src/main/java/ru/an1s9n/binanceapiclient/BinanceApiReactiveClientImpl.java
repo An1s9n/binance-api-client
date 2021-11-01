@@ -6,12 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.exception.BinanceApiException;
+import ru.an1s9n.binanceapiclient.model.market.AggregateTradeItem;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.API_KEY_HEADER;
@@ -101,8 +103,20 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   }
 
   @Override
-  public Mono<List<TradeItem>> getAggregateTrades(String symbol, long fromId, long startTime, long endTime, int limit) {
-    return null; // TODO
+  public Mono<List<AggregateTradeItem>> getAggregateTrades(String symbol, Long fromId, Long startTime, Long endTime, Integer limit) {
+    return webClient.get()
+      .uri(uriBuilder -> uriBuilder
+        .path(AGGREGATE_TRADES_ENDPOINT)
+        .queryParam("symbol", symbol.toUpperCase())
+        .queryParamIfPresent("fromId", Optional.ofNullable(fromId))
+        .queryParamIfPresent("startTime", Optional.ofNullable(startTime))
+        .queryParamIfPresent("endTime", Optional.ofNullable(endTime))
+        .queryParamIfPresent("limit", Optional.ofNullable(limit))
+        .build()
+      )
+      .retrieve()
+      .onStatus(HttpStatus.BAD_REQUEST::equals, response -> response.bodyToMono(BinanceApiException.class))
+      .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
   private String prepareSymbolsString(List<String> symbols) {
