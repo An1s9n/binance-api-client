@@ -61,12 +61,12 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   }
 
   @Override
-  public Mono<OrderBook> getOrderBook(String symbol, int limit) {
+  public Mono<OrderBook> getOrderBook(String symbol, Integer limit) {
     return webClient.get()
       .uri(uriBuilder -> uriBuilder
         .path(ORDER_BOOK_ENDPOINT)
         .queryParam("symbol", symbol.toUpperCase())
-        .queryParam("limit", limit)
+        .queryParamIfPresent("limit", Optional.ofNullable(limit))
         .build()
       )
       .retrieve()
@@ -74,12 +74,12 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   }
 
   @Override
-  public Mono<List<TradeItem>> getRecentTrades(String symbol, int limit) {
+  public Mono<List<TradeItem>> getRecentTrades(String symbol, Integer limit) {
     return webClient.get()
       .uri(uriBuilder -> uriBuilder
         .path(RECENT_TRADES_ENDPOINT)
         .queryParam("symbol", symbol.toUpperCase())
-        .queryParam("limit", limit)
+        .queryParamIfPresent("limit", Optional.ofNullable(limit))
         .build()
       )
       .retrieve()
@@ -87,13 +87,13 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   }
 
   @Override
-  public Mono<List<TradeItem>> getHistoricalTrades(String symbol, int limit, long fromId) {
+  public Mono<List<TradeItem>> getHistoricalTrades(String symbol, Integer limit, Long fromId) {
     return webClient.get()
       .uri(uriBuilder -> uriBuilder
         .path(HISTORICAL_TRADES_ENDPOINT)
         .queryParam("symbol", symbol.toUpperCase())
-        .queryParam("limit", limit)
-        .queryParam("fromId", fromId)
+        .queryParamIfPresent("limit", Optional.ofNullable(limit))
+        .queryParamIfPresent("fromId", Optional.ofNullable(fromId))
         .build()
       )
       .header(API_KEY_HEADER, apiKey)

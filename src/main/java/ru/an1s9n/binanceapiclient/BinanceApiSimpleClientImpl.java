@@ -40,17 +40,17 @@ public class BinanceApiSimpleClientImpl implements BinanceApiSimpleClient {
   }
 
   @Override
-  public OrderBook getOrderBook(String symbol, int limit) {
+  public OrderBook getOrderBook(String symbol, Integer limit) {
     return reactiveClient.getOrderBook(symbol, limit).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 
   @Override
-  public List<TradeItem> getRecentTrades(String symbol, int limit) {
+  public List<TradeItem> getRecentTrades(String symbol, Integer limit) {
     return reactiveClient.getRecentTrades(symbol, limit).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 
   @Override
-  public List<TradeItem> getHistoricalTrades(String symbol, int limit, long fromId) {
+  public List<TradeItem> getHistoricalTrades(String symbol, Integer limit, Long fromId) {
     return reactiveClient.getHistoricalTrades(symbol, limit, fromId).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 
