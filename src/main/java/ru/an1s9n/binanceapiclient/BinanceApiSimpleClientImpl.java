@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import ru.an1s9n.binanceapiclient.exception.BinanceApiException;
 import ru.an1s9n.binanceapiclient.model.market.AggregateTradeItem;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
+import ru.an1s9n.binanceapiclient.model.market.Kline;
+import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
@@ -57,6 +59,11 @@ public class BinanceApiSimpleClientImpl implements BinanceApiSimpleClient {
   @Override
   public List<AggregateTradeItem> getAggregateTrades(String symbol, Long fromId, Long startTime, Long endTime, Integer limit) {
     return reactiveClient.getAggregateTrades(symbol, fromId, startTime, endTime, limit).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
+  }
+
+  @Override
+  public List<Kline> getKlines(String symbol, KlineInterval interval, Long startTime, Long endTime, Integer limit) {
+    return reactiveClient.getKlines(symbol, interval, startTime, endTime, limit).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 
 }

@@ -8,6 +8,8 @@ import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.exception.BinanceApiException;
 import ru.an1s9n.binanceapiclient.model.market.AggregateTradeItem;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
+import ru.an1s9n.binanceapiclient.model.market.Kline;
+import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
@@ -116,6 +118,22 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus.BAD_REQUEST::equals, response -> response.bodyToMono(BinanceApiException.class))
+      .bodyToMono(new ParameterizedTypeReference<>() {});
+  }
+
+  @Override
+  public Mono<List<Kline>> getKlines(String symbol, KlineInterval interval, Long startTime, Long endTime, Integer limit) {
+    return webClient.get()
+      .uri(uriBuilder -> uriBuilder
+        .path(KLINES_ENDPOINT)
+        .queryParam("symbol", symbol.toUpperCase())
+        .queryParam("interval", interval.getId())
+        .queryParamIfPresent("startTime", Optional.ofNullable(startTime))
+        .queryParamIfPresent("endTime", Optional.ofNullable(endTime))
+        .queryParamIfPresent("limit", Optional.ofNullable(limit))
+        .build()
+      )
+      .retrieve()
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 

@@ -3,6 +3,8 @@ package ru.an1s9n.binanceapiclient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.AggregateTradeItem;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
+import ru.an1s9n.binanceapiclient.model.market.Kline;
+import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
@@ -19,5 +21,6 @@ public interface BinanceApiReactiveClient {
   Mono<List<TradeItem>> getRecentTrades(String symbol, Integer limit);
   Mono<List<TradeItem>> getHistoricalTrades(String symbol, Integer limit, Long fromId);
   Mono<List<AggregateTradeItem>> getAggregateTrades (String symbol, Long fromId, Long startTime, Long endTime, Integer limit);
+  Mono<List<Kline>> getKlines(String symbol, KlineInterval interval, Long startTime, Long endTime, Integer limit);
 
 }
