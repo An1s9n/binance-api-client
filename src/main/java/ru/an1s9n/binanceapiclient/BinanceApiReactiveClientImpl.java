@@ -13,6 +13,7 @@ import ru.an1s9n.binanceapiclient.model.market.Kline;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
+import ru.an1s9n.binanceapiclient.model.market.TickerPrice;
 import ru.an1s9n.binanceapiclient.model.market.TickerStatistics;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
@@ -169,6 +170,26 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .bodyToMono(TickerStatistics.class);
+  }
+
+  @Override
+  public Mono<List<TickerPrice>> getTickerPrice() {
+    return webClient.get()
+      .uri(TICKER_PRICE_ENDPOINT)
+      .retrieve()
+      .bodyToMono(new ParameterizedTypeReference<>() {});
+  }
+
+  @Override
+  public Mono<TickerPrice> getTickerPrice(String symbol) {
+    return webClient.get()
+      .uri(uriBuilder -> uriBuilder
+        .path(TICKER_PRICE_ENDPOINT)
+        .queryParam("symbol", symbol.toUpperCase())
+        .build()
+      )
+      .retrieve()
+      .bodyToMono(TickerPrice.class);
   }
 
   private String prepareSymbolsString(List<String> symbols) {
