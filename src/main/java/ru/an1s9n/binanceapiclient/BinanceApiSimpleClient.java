@@ -6,6 +6,7 @@ import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.Kline;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
+import ru.an1s9n.binanceapiclient.model.market.TickerOrderBook;
 import ru.an1s9n.binanceapiclient.model.market.TickerPrice;
 import ru.an1s9n.binanceapiclient.model.market.Ticker24HrStatistics;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
@@ -29,5 +30,7 @@ public interface BinanceApiSimpleClient {
   Ticker24HrStatistics get24HrTickerStatistics(String symbol);
   List<TickerPrice> getTickerPrice();
   TickerPrice getTickerPrice(String symbol);
+  List<TickerOrderBook> getTickerOrderBook();
+  TickerOrderBook getTickerOrderBook(String symbol);
 
 }

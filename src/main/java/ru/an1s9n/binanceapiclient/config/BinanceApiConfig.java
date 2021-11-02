@@ -26,6 +26,7 @@ public class BinanceApiConfig {
     public static final String AVERAGE_PRICE_ENDPOINT = "/api/v3/avgPrice";
     public static final String TICKER_24HR_STATISTICS_ENDPOINT = "/api/v3/ticker/24hr";
     public static final String TICKER_PRICE_ENDPOINT = "/api/v3/ticker/price";
+    public static final String TICKER_ORDER_BOOK_ENDPOINT = "/api/v3/ticker/bookTicker";
   }
 
 }
