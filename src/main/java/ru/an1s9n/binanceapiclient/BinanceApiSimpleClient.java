@@ -6,6 +6,7 @@ import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.Kline;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
+import ru.an1s9n.binanceapiclient.model.market.TickerStatistics;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface BinanceApiSimpleClient {
   List<AggregateTradeItem> getAggregateTrades (String symbol, Long fromId, Long startTime, Long endTime, Integer limit);
   List<Kline> getKlines(String symbol, KlineInterval interval, Long startTime, Long endTime, Integer limit);
   AveragePrice getAveragePrice(String symbol);
+  List<TickerStatistics> get24HrTickerStatistics();
+  TickerStatistics get24HrTickerStatistics(String symbol);
 
 }
