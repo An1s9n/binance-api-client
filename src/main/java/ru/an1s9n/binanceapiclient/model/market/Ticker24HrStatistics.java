@@ -6,7 +6,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class TickerStatistics {
+public class Ticker24HrStatistics {
   private String symbol;
   private BigDecimal priceChange;
   private BigDecimal priceChangePercent;

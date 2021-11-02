@@ -9,7 +9,7 @@ import ru.an1s9n.binanceapiclient.model.market.Kline;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.TickerPrice;
-import ru.an1s9n.binanceapiclient.model.market.TickerStatistics;
+import ru.an1s9n.binanceapiclient.model.market.Ticker24HrStatistics;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
 import java.util.List;
@@ -75,12 +75,12 @@ public class BinanceApiSimpleClientImpl implements BinanceApiSimpleClient {
   }
 
   @Override
-  public List<TickerStatistics> get24HrTickerStatistics() {
+  public List<Ticker24HrStatistics> get24HrTickerStatistics() {
     return reactiveClient.get24HrTickerStatistics().blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 
   @Override
-  public TickerStatistics get24HrTickerStatistics(String symbol) {
+  public Ticker24HrStatistics get24HrTickerStatistics(String symbol) {
     return reactiveClient.get24HrTickerStatistics(symbol).blockOptional().orElseThrow(() -> new BinanceApiException(0, "something went wrong"));
   }
 

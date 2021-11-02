@@ -14,7 +14,7 @@ import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.market.OrderBook;
 import ru.an1s9n.binanceapiclient.model.market.ServerTime;
 import ru.an1s9n.binanceapiclient.model.market.TickerPrice;
-import ru.an1s9n.binanceapiclient.model.market.TickerStatistics;
+import ru.an1s9n.binanceapiclient.model.market.Ticker24HrStatistics;
 import ru.an1s9n.binanceapiclient.model.market.TradeItem;
 
 import java.util.List;
@@ -153,23 +153,23 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   }
 
   @Override
-  public Mono<List<TickerStatistics>> get24HrTickerStatistics() {
+  public Mono<List<Ticker24HrStatistics>> get24HrTickerStatistics() {
     return webClient.get()
-      .uri(TICKER_STATISTICS_24HR_ENDPOINT)
+      .uri(TICKER_24HR_STATISTICS_ENDPOINT)
       .retrieve()
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
   @Override
-  public Mono<TickerStatistics> get24HrTickerStatistics(String symbol) {
+  public Mono<Ticker24HrStatistics> get24HrTickerStatistics(String symbol) {
     return webClient.get()
       .uri(uriBuilder -> uriBuilder
-        .path(TICKER_STATISTICS_24HR_ENDPOINT)
+        .path(TICKER_24HR_STATISTICS_ENDPOINT)
         .queryParam("symbol", symbol.toUpperCase())
         .build()
       )
       .retrieve()
-      .bodyToMono(TickerStatistics.class);
+      .bodyToMono(Ticker24HrStatistics.class);
   }
 
   @Override

@@ -24,7 +24,7 @@ public class BinanceApiConfig {
     public static final String AGGREGATE_TRADES_ENDPOINT = "/api/v3/aggTrades";
     public static final String KLINES_ENDPOINT = "/api/v3/klines";
     public static final String AVERAGE_PRICE_ENDPOINT = "/api/v3/avgPrice";
-    public static final String TICKER_STATISTICS_24HR_ENDPOINT = "/api/v3/ticker/24hr";
+    public static final String TICKER_24HR_STATISTICS_ENDPOINT = "/api/v3/ticker/24hr";
     public static final String TICKER_PRICE_ENDPOINT = "/api/v3/ticker/price";
   }
 
