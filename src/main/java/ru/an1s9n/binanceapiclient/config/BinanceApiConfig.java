@@ -23,6 +23,7 @@ public class BinanceApiConfig {
     public static final String HISTORICAL_TRADES_ENDPOINT = "/api/v3/historicalTrades";
     public static final String AGGREGATE_TRADES_ENDPOINT = "/api/v3/aggTrades";
     public static final String KLINES_ENDPOINT = "/api/v3/klines";
+    public static final String AVERAGE_PRICE_ENDPOINT = "/api/v3/avgPrice";
   }
 
 }

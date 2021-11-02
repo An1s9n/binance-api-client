@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.exception.BinanceApiException;
 import ru.an1s9n.binanceapiclient.model.market.AggregateTradeItem;
+import ru.an1s9n.binanceapiclient.model.market.AveragePrice;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.Kline;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
@@ -135,6 +136,18 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .bodyToMono(new ParameterizedTypeReference<>() {});
+  }
+
+  @Override
+  public Mono<AveragePrice> getAveragePrice(String symbol) {
+    return webClient.get()
+      .uri(uriBuilder -> uriBuilder
+        .path(AVERAGE_PRICE_ENDPOINT)
+        .queryParam("symbol", symbol.toUpperCase())
+        .build()
+      )
+      .retrieve()
+      .bodyToMono(AveragePrice.class);
   }
 
   private String prepareSymbolsString(List<String> symbols) {

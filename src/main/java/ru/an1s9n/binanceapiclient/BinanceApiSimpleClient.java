@@ -1,6 +1,7 @@
 package ru.an1s9n.binanceapiclient;
 
 import ru.an1s9n.binanceapiclient.model.market.AggregateTradeItem;
+import ru.an1s9n.binanceapiclient.model.market.AveragePrice;
 import ru.an1s9n.binanceapiclient.model.market.ExchangeInfo;
 import ru.an1s9n.binanceapiclient.model.market.Kline;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
@@ -21,5 +22,6 @@ public interface BinanceApiSimpleClient {
   List<TradeItem> getHistoricalTrades(String symbol, Integer limit, Long fromId);
   List<AggregateTradeItem> getAggregateTrades (String symbol, Long fromId, Long startTime, Long endTime, Integer limit);
   List<Kline> getKlines(String symbol, KlineInterval interval, Long startTime, Long endTime, Integer limit);
+  AveragePrice getAveragePrice(String symbol);
 
 }
