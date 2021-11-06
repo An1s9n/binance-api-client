@@ -18,4 +18,9 @@ public class BinanceApiException extends RuntimeException {
     this.error = error;
   }
 
+  public BinanceApiException(int httpStatus) {
+    this.httpStatus = httpStatus;
+    this.error = null;
+  }
+
 }

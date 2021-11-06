@@ -3,8 +3,10 @@ package ru.an1s9n.binanceapiclient.exception;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class BinanceApiError {
+public class BinanceApiError implements Serializable {
 
   private final Integer code;
   private final String msg;

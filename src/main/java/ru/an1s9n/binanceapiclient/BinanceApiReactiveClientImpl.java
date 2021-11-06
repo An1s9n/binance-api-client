@@ -33,14 +33,13 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
   private final String apiKey;
   private final String secret;
 
-  //TODO: handle errors
-
   @Override
   public Mono<Void> ping() {
     return webClient.get()
       .uri(PING_ENDPOINT)
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(Void.class);
   }
 
@@ -50,6 +49,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       .uri(SERVER_TIME_ENDPOINT)
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(ServerTime.class).flatMap(st -> Mono.just(st.getServerTime()));
   }
 
@@ -59,6 +59,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       .uri(EXCHANGE_INFO_ENDPOINT)
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(ExchangeInfo.class);
   }
 
@@ -77,6 +78,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(ExchangeInfo.class);
   }
 
@@ -91,6 +93,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(OrderBook.class);
   }
 
@@ -105,6 +108,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
@@ -121,6 +125,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       .header(API_KEY_HEADER, apiKey)
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
@@ -138,6 +143,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
@@ -155,6 +161,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
@@ -168,6 +175,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(AveragePrice.class);
   }
 
@@ -177,6 +185,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       .uri(TICKER_24HR_STATISTICS_ENDPOINT)
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
@@ -190,6 +199,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(Ticker24HrStatistics.class);
   }
 
@@ -199,6 +209,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       .uri(TICKER_PRICE_ENDPOINT)
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
@@ -212,6 +223,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(TickerPrice.class);
   }
 
@@ -221,6 +233,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       .uri(TICKER_ORDER_BOOK_ENDPOINT)
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(new ParameterizedTypeReference<>() {});
   }
 
@@ -234,6 +247,7 @@ public class BinanceApiReactiveClientImpl implements BinanceApiReactiveClient {
       )
       .retrieve()
       .onStatus(HttpStatus::is4xxClientError, response -> response.bodyToMono(BinanceApiError.class).map(it -> new BinanceApiException(response.rawStatusCode(), it)))
+      .onStatus(HttpStatus::is5xxServerError, response -> Mono.just(new BinanceApiException(response.rawStatusCode())))
       .bodyToMono(TickerOrderBook.class);
   }
 
