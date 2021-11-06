@@ -40,4 +40,12 @@ public class BinanceApiClientFactory {
     return new BinanceApiSimpleClientImpl(getBinanceApiReactiveClient());
   }
 
+  public static BinanceApiWebSocketClient getBinanceApiWebSocketClient(String apiKey, String secret) {
+    return null; //TODO
+  }
+
+  public static BinanceApiWebSocketClient getBinanceApiWebSocketClient() {
+    return null; //TODO
+  }
+
 }

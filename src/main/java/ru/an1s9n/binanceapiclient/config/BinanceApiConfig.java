@@ -13,6 +13,14 @@ public class BinanceApiConfig {
     return "https://api.%s".formatted(BASE_DOMAIN);
   }
 
+  public static String apiWebSocketUrl() {
+    return "wss://stream.%s:9443".formatted(BASE_DOMAIN);
+  }
+
+  //TODO read https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-websocket-client
+  //TODO read https://www.baeldung.com/spring-5-reactive-websockets
+  //TODO read https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/reactive/socket/client/WebSocketClient.html
+
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class Endpoints {
     public static final String PING_ENDPOINT = "/api/v3/ping";
