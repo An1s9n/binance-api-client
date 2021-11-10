@@ -6,6 +6,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.socket.client.StandardWebSocketClient;
+import org.springframework.web.reactive.socket.client.WebSocketClient;
 import ru.an1s9n.binanceapiclient.config.BinanceApiConfig;
 
 public class BinanceApiClientFactory {
@@ -23,6 +25,7 @@ public class BinanceApiClientFactory {
     .exchangeStrategies(exchangeStrategies)
     .baseUrl(BinanceApiConfig.apiBaseUrl())
     .build();
+  private static final WebSocketClient webSocketClient = new StandardWebSocketClient();
 
   public static BinanceApiReactiveClient getBinanceApiReactiveClient(String apiKey, String secret) {
     return new BinanceApiReactiveClientImpl(webClient, apiKey, secret);
@@ -41,11 +44,11 @@ public class BinanceApiClientFactory {
   }
 
   public static BinanceApiWebSocketClient getBinanceApiWebSocketClient(String apiKey, String secret) {
-    return null; //TODO
+    return new BinanceApiWebSocketClientImpl(webSocketClient, mapper, apiKey, secret);
   }
 
   public static BinanceApiWebSocketClient getBinanceApiWebSocketClient() {
-    return null; //TODO
+    return new BinanceApiWebSocketClientImpl(webSocketClient, mapper, null, null);
   }
 
 }

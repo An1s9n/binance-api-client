@@ -17,10 +17,6 @@ public class BinanceApiConfig {
     return "wss://stream.%s:9443".formatted(BASE_DOMAIN);
   }
 
-  //TODO read https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html#webflux-websocket-client
-  //TODO read https://www.baeldung.com/spring-5-reactive-websockets
-  //TODO read https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/reactive/socket/client/WebSocketClient.html
-
   @NoArgsConstructor(access = AccessLevel.PRIVATE)
   public static class Endpoints {
     public static final String PING_ENDPOINT = "/api/v3/ping";
@@ -35,6 +31,9 @@ public class BinanceApiConfig {
     public static final String TICKER_24HR_STATISTICS_ENDPOINT = "/api/v3/ticker/24hr";
     public static final String TICKER_PRICE_ENDPOINT = "/api/v3/ticker/price";
     public static final String TICKER_ORDER_BOOK_ENDPOINT = "/api/v3/ticker/bookTicker";
+
+    public static final String RAW_WEB_SOCKET_STREAM_ENDPOINT = "/ws";
+    public static final String AGGREGATE_TRADE_STREAM_NAME = "/%s@aggTrade";
   }
 
 }
