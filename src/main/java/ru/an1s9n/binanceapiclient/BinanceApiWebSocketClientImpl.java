@@ -12,6 +12,7 @@ import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.reactive.socket.client.WebSocketClient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.TradeEvent;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacade;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacadeImpl;
 
@@ -40,6 +41,13 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   public WebSocketSessionFacade getAggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbol, AggregateTradeEvent.class, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getTrades(String symbol, Consumer<? super TradeEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(symbol, TradeEvent.class, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
