@@ -18,10 +18,12 @@ import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacadeImpl;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static java.util.UUID.randomUUID;
 import static ru.an1s9n.binanceapiclient.config.BinanceApiConfig.Endpoints.RAW_WEB_SOCKET_STREAM_ENDPOINT;
@@ -38,27 +40,37 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   private final Map<UUID, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
   @Override
-  public WebSocketSessionFacade getAggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent) {
+  public WebSocketSessionFacade getAggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbol, AggregateTradeEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, AggregateTradeEvent.class, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getAggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent) {
+    return getAggregateTrades(List.of(symbol), onEvent);
+  }
+
+  @Override
+  public WebSocketSessionFacade getTrades(List<String> symbols, Consumer<? super TradeEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(symbols, TradeEvent.class, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
   public WebSocketSessionFacade getTrades(String symbol, Consumer<? super TradeEvent> onEvent) {
-    final var sessionUuid = randomUUID();
-    createStream(symbol, TradeEvent.class, onEvent, sessionUuid).subscribe();
-    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+    return getTrades(List.of(symbol), onEvent);
   }
 
-  private <T> Mono<Void> createStream(String symbol, Class<T> eventType, Consumer<? super T> onEvent, UUID sessionUuid) {
-    if(symbol == null) {
-      return Mono.error(new IllegalArgumentException("Symbol can not be null."));
+  private <T> Mono<Void> createStream(List<String> symbols, Class<T> eventType, Consumer<? super T> onEvent, UUID sessionUuid) {
+    if(symbols == null || symbols.isEmpty()) {
+      return Mono.error(new IllegalArgumentException("Symbols can not be null or empty."));
     }
-    final var streamName = streamName(symbol, eventType);
+    final var streamName = streamName(symbols, eventType);
     final var uri = uriFor(streamName);
     if(uri == null) {
-      return Mono.error(new IllegalArgumentException("Illegal symbol \"" + symbol + "\", can not construct URI to obtain WebSocket connection."));
+      return Mono.error(new IllegalArgumentException("Illegal symbols \"" + symbols + "\", can not construct URI to obtain WebSocket connection."));
     }
     return webSocketClient.execute(uri, session -> {
       sessions.put(sessionUuid, session);
@@ -81,7 +93,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
           session.closeStatus().subscribe(status -> {
             if(status != CloseStatus.NORMAL) {
               log.debug("WebSocket session {} {} has been closed with abnormal status {}. Going to reconnect.", streamName, sessionUuid, status);
-              createStream(symbol, eventType, onEvent, sessionUuid).subscribe();
+              createStream(symbols, eventType, onEvent, sessionUuid).subscribe();
             }
           });
         });
@@ -90,8 +102,12 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   }
 
   @SneakyThrows(ReflectiveOperationException.class)
-  private <T> String streamName(String symbol, Class<T> eventType) {
-    return eventType.getField("STREAM_NAME").get(null).toString().formatted(symbol.toLowerCase());
+  private <T> String streamName(List<String> symbols, Class<T> eventType) {
+    final var streamNameFormat = eventType.getField("STREAM_NAME").get(null).toString();
+    return "/" + symbols
+      .stream()
+      .map(streamNameFormat::formatted)
+      .collect(Collectors.joining("/"));
   }
 
   private URI uriFor(String streamName) {
