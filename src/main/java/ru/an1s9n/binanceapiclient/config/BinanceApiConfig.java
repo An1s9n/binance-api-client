@@ -35,6 +35,7 @@ public class BinanceApiConfig {
     public static final String RAW_WEB_SOCKET_STREAM_ENDPOINT = "/ws";
     public static final String AGGREGATE_TRADE_STREAM_NAME = "%s@aggTrade";
     public static final String TRADE_STREAM_NAME = "%s@trade";
+    public static final String KLINE_STREAM_NAME = "%s@kline_%s";
   }
 
 }

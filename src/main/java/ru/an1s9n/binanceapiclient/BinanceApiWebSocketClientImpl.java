@@ -11,7 +11,9 @@ import org.springframework.web.reactive.socket.WebSocketMessage;
 import org.springframework.web.reactive.socket.WebSocketSession;
 import org.springframework.web.reactive.socket.client.WebSocketClient;
 import reactor.core.publisher.Mono;
+import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.TradeEvent;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacade;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacadeImpl;
@@ -42,7 +44,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getAggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, AggregateTradeEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, null, AggregateTradeEvent.class, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -54,7 +56,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getTrades(List<String> symbols, Consumer<? super TradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, TradeEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, null, TradeEvent.class, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -63,11 +65,23 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     return getTrades(List.of(symbol), onEvent);
   }
 
-  private <T> Mono<Void> createStream(List<String> symbols, Class<T> eventType, Consumer<? super T> onEvent, UUID sessionUuid) {
+  @Override
+  public WebSocketSessionFacade getKlines(List<String> symbols, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(symbols, klineInterval.getId(), KlineEvent.class, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getKlines(String symbol, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
+    return getKlines(List.of(symbol), klineInterval, onEvent);
+  }
+
+  private <T> Mono<Void> createStream(List<String> symbols, String secondParam, Class<T> eventType, Consumer<? super T> onEvent, UUID sessionUuid) {
     if(symbols == null || symbols.isEmpty()) {
       return Mono.error(new IllegalArgumentException("Symbols can not be null or empty."));
     }
-    final var streamName = streamName(symbols, eventType);
+    final var streamName = streamName(symbols, secondParam, eventType);
     final var uri = uriFor(streamName);
     if(uri == null) {
       return Mono.error(new IllegalArgumentException("Illegal symbols \"" + symbols + "\", can not construct URI to obtain WebSocket connection."));
@@ -82,7 +96,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
               var event = mapper.readValue(message.getPayloadAsText(), eventType);
               onEvent.accept(event);
             } catch(JsonProcessingException e) {
-              log.warn("Can not deserialize from {} to {}. Skipping this message.", message, eventType.getSimpleName());
+              log.warn("Can not deserialize from {} to {}. Skipping this message.", message.getPayloadAsText(), eventType.getSimpleName());
             }
           }
         })
@@ -93,7 +107,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
           session.closeStatus().subscribe(status -> {
             if(status != CloseStatus.NORMAL) {
               log.debug("WebSocket session {} {} has been closed with abnormal status {}. Going to reconnect.", streamName, sessionUuid, status);
-              createStream(symbols, eventType, onEvent, sessionUuid).subscribe();
+              createStream(symbols, secondParam, eventType, onEvent, sessionUuid).subscribe();
             }
           });
         });
@@ -102,11 +116,11 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   }
 
   @SneakyThrows(ReflectiveOperationException.class)
-  private <T> String streamName(List<String> symbols, Class<T> eventType) {
+  private <T> String streamName(List<String> symbols, String secondParam, Class<T> eventType) {
     final var streamNameFormat = eventType.getField("STREAM_NAME").get(null).toString();
     return "/" + symbols
       .stream()
-      .map(streamNameFormat::formatted)
+      .map(symbol -> streamNameFormat.formatted(symbol, secondParam))
       .collect(Collectors.joining("/"));
   }
 
