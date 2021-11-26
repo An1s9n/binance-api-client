@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
-import ru.an1s9n.binanceapiclient.model.websocket.IndividualSymbol24HrMiniTickerEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.MiniTicker24HrEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.TradeEvent;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacade;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacadeImpl;
@@ -79,14 +79,14 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   }
 
   @Override
-  public WebSocketSessionFacade getMiniTicker24Hr(List<String> symbols, Consumer<? super IndividualSymbol24HrMiniTickerEvent> onEvent) {
+  public WebSocketSessionFacade getMiniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, IndividualSymbol24HrMiniTickerEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, null, MiniTicker24HrEvent.class, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getMiniTicker24Hr(String symbol, Consumer<? super IndividualSymbol24HrMiniTickerEvent> onEvent) {
+  public WebSocketSessionFacade getMiniTicker24Hr(String symbol, Consumer<? super MiniTicker24HrEvent> onEvent) {
     return getMiniTicker24Hr(List.of(symbol), onEvent);
   }
 
