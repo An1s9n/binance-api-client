@@ -20,5 +20,6 @@ public interface BinanceApiWebSocketClient {
   WebSocketSessionFacade getKlines(String symbol, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent);
   WebSocketSessionFacade getMiniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent);
   WebSocketSessionFacade getMiniTicker24Hr(String symbol, Consumer<? super MiniTicker24HrEvent> onEvent);
+  WebSocketSessionFacade getMiniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent);
 
 }

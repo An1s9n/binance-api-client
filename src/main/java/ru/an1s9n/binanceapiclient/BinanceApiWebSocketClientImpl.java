@@ -45,7 +45,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getAggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, AggregateTradeEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, null, AggregateTradeEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -57,7 +57,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getTrades(List<String> symbols, Consumer<? super TradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, TradeEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, null, TradeEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -69,7 +69,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getKlines(List<String> symbols, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, klineInterval.getId(), KlineEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, klineInterval.getId(), KlineEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -81,7 +81,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getMiniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, MiniTicker24HrEvent.class, onEvent, sessionUuid).subscribe();
+    createStream(symbols, null, MiniTicker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -90,11 +90,18 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     return getMiniTicker24Hr(List.of(symbol), onEvent);
   }
 
-  private <T> Mono<Void> createStream(List<String> symbols, String secondParam, Class<T> eventType, Consumer<? super T> onEvent, UUID sessionUuid) {
-    if(symbols == null || symbols.isEmpty()) {
+  @Override
+  public WebSocketSessionFacade getMiniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(null, null, MiniTicker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  private <T> Mono<Void> createStream(List<String> symbols, String secondParam, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {
+    if(!allMarket && (symbols == null || symbols.isEmpty())) {
       return Mono.error(new IllegalArgumentException("Symbols can not be null or empty."));
     }
-    final var streamName = streamName(symbols, secondParam, eventType);
+    final var streamName = streamName(allMarket, symbols, secondParam, eventType);
     final var uri = uriFor(streamName);
     if(uri == null) {
       return Mono.error(new IllegalArgumentException("Illegal symbols \"" + symbols + "\", can not construct URI to obtain WebSocket connection."));
@@ -106,8 +113,14 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
         .doOnNext(message -> {
           if(message.getType() == WebSocketMessage.Type.TEXT) {
             try {
-              var event = mapper.readValue(message.getPayloadAsText(), eventType);
-              onEvent.accept(event);
+              final var payload = message.getPayloadAsText();
+              if(allMarket) {
+                final List<T> events = mapper.readValue(payload, mapper.getTypeFactory().constructCollectionType(List.class, eventType));
+                events.forEach(onEvent);
+              } else {
+                final var event = mapper.readValue(payload, eventType);
+                onEvent.accept(event);
+              }
             } catch(JsonProcessingException e) {
               log.warn("Can not deserialize from {} to {}. Skipping this message.", message.getPayloadAsText(), eventType.getSimpleName());
             }
@@ -120,7 +133,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
           session.closeStatus().subscribe(status -> {
             if(status != CloseStatus.NORMAL) {
               log.debug("WebSocket session {} {} has been closed with abnormal status {}. Going to reconnect.", streamName, sessionUuid, status);
-              createStream(symbols, secondParam, eventType, onEvent, sessionUuid).subscribe();
+              createStream(symbols, secondParam, eventType, allMarket, onEvent, sessionUuid).subscribe();
             }
           });
         });
@@ -129,7 +142,10 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   }
 
   @SneakyThrows(ReflectiveOperationException.class)
-  private <T> String streamName(List<String> symbols, String secondParam, Class<T> eventType) {
+  private <T> String streamName(boolean allMarket, List<String> symbols, String secondParam, Class<T> eventType) {
+    if(allMarket) {
+      return "/" + eventType.getField("ALL_MARKET_STREAM_NAME").get(null).toString();
+    }
     final var streamNameFormat = eventType.getField("STREAM_NAME").get(null).toString();
     return "/" + symbols
       .stream()

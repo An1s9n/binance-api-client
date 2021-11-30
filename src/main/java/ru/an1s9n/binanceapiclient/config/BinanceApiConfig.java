@@ -37,6 +37,7 @@ public class BinanceApiConfig {
     public static final String TRADE_STREAM_NAME = "%s@trade";
     public static final String KLINE_STREAM_NAME = "%s@kline_%s";
     public static final String INDIVIDUAL_SYMBOL_MINI_TICKER_24_HR_STREAM_NAME = "%s@miniTicker";
+    public static final String ALL_MARKET_MINI_TICKER_24_HR_STREAM_NAME = "!miniTicker@arr";
   }
 
 }

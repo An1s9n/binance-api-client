@@ -2,13 +2,16 @@ package ru.an1s9n.binanceapiclient;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.websocket.WsWebSocketContainer;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.socket.client.StandardWebSocketClient;
+import org.springframework.web.reactive.socket.client.TomcatWebSocketClient;
 import org.springframework.web.reactive.socket.client.WebSocketClient;
 import ru.an1s9n.binanceapiclient.config.BinanceApiConfig;
+
+import javax.websocket.WebSocketContainer;
 
 public class BinanceApiClientFactory {
 
@@ -25,7 +28,11 @@ public class BinanceApiClientFactory {
     .exchangeStrategies(exchangeStrategies)
     .baseUrl(BinanceApiConfig.apiBaseUrl())
     .build();
-  private static final WebSocketClient webSocketClient = new StandardWebSocketClient();
+  private static final WebSocketContainer webSocketContainer = new WsWebSocketContainer();
+  static {
+    webSocketContainer.setDefaultMaxTextMessageBufferSize(819200);
+  }
+  private static final WebSocketClient webSocketClient = new TomcatWebSocketClient(webSocketContainer);
 
   public static BinanceApiReactiveClient getBinanceApiReactiveClient(String apiKey, String secret) {
     return new BinanceApiReactiveClientImpl(webClient, apiKey, secret);
