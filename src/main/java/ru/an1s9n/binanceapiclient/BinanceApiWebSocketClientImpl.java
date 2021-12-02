@@ -47,7 +47,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getAggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, AggregateTradeEvent.class, false, onEvent, sessionUuid).subscribe();
+    createStream(symbols, List.of(), AggregateTradeEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -59,7 +59,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getTrades(List<String> symbols, Consumer<? super TradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, TradeEvent.class, false, onEvent, sessionUuid).subscribe();
+    createStream(symbols, List.of(), TradeEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -71,7 +71,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getKlines(List<String> symbols, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, klineInterval.getId(), KlineEvent.class, false, onEvent, sessionUuid).subscribe();
+    createStream(symbols, List.of(klineInterval.getId()), KlineEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -83,7 +83,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getMiniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, MiniTicker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
+    createStream(symbols, List.of(), MiniTicker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -95,14 +95,14 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getMiniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(null, null, MiniTicker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
+    createStream(null, List.of(), MiniTicker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
   public WebSocketSessionFacade getTicker24Hr(List<String> symbols, Consumer<? super Ticker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, Ticker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
+    createStream(symbols, List.of(), Ticker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -114,14 +114,14 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getTicker24Hr(Consumer<? super Ticker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(null, null, Ticker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
+    createStream(null, List.of(), Ticker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
   public WebSocketSessionFacade getBookTicker(List<String> symbols, Consumer<? super BookTickerEvent> onEvent) {
     final var sessionUuid = randomUUID();
-    createStream(symbols, null, BookTickerEvent.class, false, onEvent, sessionUuid).subscribe();
+    createStream(symbols, List.of(), BookTickerEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
@@ -137,11 +137,11 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
-  private <T> Mono<Void> createStream(List<String> symbols, String secondParam, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {
+  private <T> Mono<Void> createStream(List<String> symbols, List<String> additionalParams, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {
     if(!allMarket && (symbols == null || symbols.isEmpty())) {
       return Mono.error(new IllegalArgumentException("Symbols can not be null or empty."));
     }
-    final var streamName = streamName(allMarket, symbols, secondParam, eventType);
+    final var streamName = streamName(allMarket, symbols, additionalParams, eventType);
     final var uri = uriFor(streamName);
     if(uri == null) {
       return Mono.error(new IllegalArgumentException("Illegal symbols \"" + symbols + "\", can not construct URI to obtain WebSocket connection."));
@@ -173,7 +173,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
           session.closeStatus().subscribe(status -> {
             if(status != CloseStatus.NORMAL) {
               log.debug("WebSocket session {} {} has been closed with abnormal status {}. Going to reconnect.", streamName, sessionUuid, status);
-              createStream(symbols, secondParam, eventType, allMarket, onEvent, sessionUuid).subscribe();
+              createStream(symbols, additionalParams, eventType, allMarket, onEvent, sessionUuid).subscribe();
             }
           });
         });
@@ -182,14 +182,14 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   }
 
   @SneakyThrows(ReflectiveOperationException.class)
-  private <T> String streamName(boolean allMarket, List<String> symbols, String secondParam, Class<T> eventType) {
+  private <T> String streamName(boolean allMarket, List<String> symbols, List<String> additionalParams, Class<T> eventType) {
     if(allMarket) {
       return "/" + eventType.getField("ALL_MARKET_STREAM_NAME").get(null).toString();
     }
     final var streamNameFormat = eventType.getField("STREAM_NAME").get(null).toString();
     return "/" + symbols
       .stream()
-      .map(symbol -> streamNameFormat.formatted(symbol, secondParam))
+      .map(symbol -> streamNameFormat.formatted(symbol, additionalParams.toArray()))
       .collect(Collectors.joining("/"));
   }
 
