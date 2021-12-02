@@ -2,6 +2,7 @@ package ru.an1s9n.binanceapiclient;
 
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.BookTickerEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.MiniTicker24HrEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.Ticker24HrEvent;
@@ -25,5 +26,8 @@ public interface BinanceApiWebSocketClient {
   WebSocketSessionFacade getTicker24Hr(List<String> symbols, Consumer<? super Ticker24HrEvent> onEvent);
   WebSocketSessionFacade getTicker24Hr(String symbol, Consumer<? super Ticker24HrEvent> onEvent);
   WebSocketSessionFacade getTicker24Hr(Consumer<? super Ticker24HrEvent> onEvent);
+  WebSocketSessionFacade getBookTicker(List<String> symbols, Consumer<? super BookTickerEvent> onEvent);
+  WebSocketSessionFacade getBookTicker(String symbol, Consumer<? super BookTickerEvent> onEvent);
+  WebSocketSessionFacade getBookTicker(Consumer<? super BookTickerEvent> onEvent);
 
 }

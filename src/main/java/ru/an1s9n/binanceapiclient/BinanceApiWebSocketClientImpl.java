@@ -13,6 +13,7 @@ import org.springframework.web.reactive.socket.client.WebSocketClient;
 import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.BookTickerEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.MiniTicker24HrEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.Ticker24HrEvent;
@@ -117,6 +118,25 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
+  @Override
+  public WebSocketSessionFacade getBookTicker(List<String> symbols, Consumer<? super BookTickerEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(symbols, null, BookTickerEvent.class, false, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getBookTicker(String symbol, Consumer<? super BookTickerEvent> onEvent) {
+    return getBookTicker(List.of(symbol), onEvent);
+  }
+
+  @Override
+  public WebSocketSessionFacade getBookTicker(Consumer<? super BookTickerEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(null, null, BookTickerEvent.class, true, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
   private <T> Mono<Void> createStream(List<String> symbols, String secondParam, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {
     if(!allMarket && (symbols == null || symbols.isEmpty())) {
       return Mono.error(new IllegalArgumentException("Symbols can not be null or empty."));
@@ -134,7 +154,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
           if(message.getType() == WebSocketMessage.Type.TEXT) {
             try {
               final var payload = message.getPayloadAsText();
-              if(allMarket) {
+              if(allMarket && payload.startsWith("[")) {
                 final List<T> events = mapper.readValue(payload, mapper.getTypeFactory().constructCollectionType(List.class, eventType));
                 events.forEach(onEvent);
               } else {
