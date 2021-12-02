@@ -15,6 +15,7 @@ import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.MiniTicker24HrEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.Ticker24HrEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.TradeEvent;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacade;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacadeImpl;
@@ -94,6 +95,25 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   public WebSocketSessionFacade getMiniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(null, null, MiniTicker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getTicker24Hr(List<String> symbols, Consumer<? super Ticker24HrEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(symbols, null, Ticker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getTicker24Hr(String symbol, Consumer<? super Ticker24HrEvent> onEvent) {
+    return getTicker24Hr(List.of(symbol), onEvent);
+  }
+
+  @Override
+  public WebSocketSessionFacade getTicker24Hr(Consumer<? super Ticker24HrEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(null, null, Ticker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
