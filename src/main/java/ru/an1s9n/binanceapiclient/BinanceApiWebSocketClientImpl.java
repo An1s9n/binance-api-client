@@ -14,10 +14,13 @@ import reactor.core.publisher.Mono;
 import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.BookTickerEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.Depth;
 import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.MiniTicker24HrEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.PartialBookDepthEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.Ticker24HrEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.TradeEvent;
+import ru.an1s9n.binanceapiclient.model.websocket.UpdateSpeed;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacade;
 import ru.an1s9n.binanceapiclient.websocket.WebSocketSessionFacadeImpl;
 
@@ -137,6 +140,18 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
+  @Override
+  public WebSocketSessionFacade getPartialBookDepth(List<String> symbols, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(symbols, List.of(depth.getDepthLevel(), updateSpeed.getId()), PartialBookDepthEvent.class, false, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getPartialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
+    return getPartialBookDepth(List.of(symbol), depth, updateSpeed, onEvent);
+  }
+
   private <T> Mono<Void> createStream(List<String> symbols, List<String> additionalParams, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {
     if(!allMarket && (symbols == null || symbols.isEmpty())) {
       return Mono.error(new IllegalArgumentException("Symbols can not be null or empty."));
@@ -189,7 +204,8 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     final var streamNameFormat = eventType.getField("STREAM_NAME").get(null).toString();
     return "/" + symbols
       .stream()
-      .map(symbol -> streamNameFormat.formatted(symbol, additionalParams.toArray()))
+      .map(symbol -> streamNameFormat.formatted(symbol, "%s", "%s"))
+      .map(streamNameFormatWithSymbol ->  streamNameFormatWithSymbol.formatted(additionalParams.toArray()))
       .collect(Collectors.joining("/"));
   }
 
