@@ -47,120 +47,120 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   private final Map<UUID, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
   @Override
-  public WebSocketSessionFacade getAggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent) {
+  public WebSocketSessionFacade aggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(), AggregateTradeEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getAggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent) {
-    return getAggregateTrades(List.of(symbol), onEvent);
+  public WebSocketSessionFacade aggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent) {
+    return aggregateTrades(List.of(symbol), onEvent);
   }
 
   @Override
-  public WebSocketSessionFacade getTrades(List<String> symbols, Consumer<? super TradeEvent> onEvent) {
+  public WebSocketSessionFacade trades(List<String> symbols, Consumer<? super TradeEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(), TradeEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getTrades(String symbol, Consumer<? super TradeEvent> onEvent) {
-    return getTrades(List.of(symbol), onEvent);
+  public WebSocketSessionFacade trades(String symbol, Consumer<? super TradeEvent> onEvent) {
+    return trades(List.of(symbol), onEvent);
   }
 
   @Override
-  public WebSocketSessionFacade getKlines(List<String> symbols, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
+  public WebSocketSessionFacade klines(List<String> symbols, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(klineInterval.getId()), KlineEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getKlines(String symbol, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
-    return getKlines(List.of(symbol), klineInterval, onEvent);
+  public WebSocketSessionFacade klines(String symbol, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
+    return klines(List.of(symbol), klineInterval, onEvent);
   }
 
   @Override
-  public WebSocketSessionFacade getMiniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent) {
+  public WebSocketSessionFacade miniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(), MiniTicker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getMiniTicker24Hr(String symbol, Consumer<? super MiniTicker24HrEvent> onEvent) {
-    return getMiniTicker24Hr(List.of(symbol), onEvent);
+  public WebSocketSessionFacade miniTicker24Hr(String symbol, Consumer<? super MiniTicker24HrEvent> onEvent) {
+    return miniTicker24Hr(List.of(symbol), onEvent);
   }
 
   @Override
-  public WebSocketSessionFacade getMiniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent) {
+  public WebSocketSessionFacade miniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(null, List.of(), MiniTicker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getTicker24Hr(List<String> symbols, Consumer<? super Ticker24HrEvent> onEvent) {
+  public WebSocketSessionFacade ticker24Hr(List<String> symbols, Consumer<? super Ticker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(), Ticker24HrEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getTicker24Hr(String symbol, Consumer<? super Ticker24HrEvent> onEvent) {
-    return getTicker24Hr(List.of(symbol), onEvent);
+  public WebSocketSessionFacade ticker24Hr(String symbol, Consumer<? super Ticker24HrEvent> onEvent) {
+    return ticker24Hr(List.of(symbol), onEvent);
   }
 
   @Override
-  public WebSocketSessionFacade getTicker24Hr(Consumer<? super Ticker24HrEvent> onEvent) {
+  public WebSocketSessionFacade ticker24Hr(Consumer<? super Ticker24HrEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(null, List.of(), Ticker24HrEvent.class, true, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getBookTicker(List<String> symbols, Consumer<? super BookTickerEvent> onEvent) {
+  public WebSocketSessionFacade bookTicker(List<String> symbols, Consumer<? super BookTickerEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(), BookTickerEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getBookTicker(String symbol, Consumer<? super BookTickerEvent> onEvent) {
-    return getBookTicker(List.of(symbol), onEvent);
+  public WebSocketSessionFacade bookTicker(String symbol, Consumer<? super BookTickerEvent> onEvent) {
+    return bookTicker(List.of(symbol), onEvent);
   }
 
   @Override
-  public WebSocketSessionFacade getBookTicker(Consumer<? super BookTickerEvent> onEvent) {
+  public WebSocketSessionFacade bookTicker(Consumer<? super BookTickerEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(null, null, BookTickerEvent.class, true, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getPartialBookDepth(List<String> symbols, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
+  public WebSocketSessionFacade partialBookDepth(List<String> symbols, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(depth.getDepthLevel(), updateSpeed.getId()), PartialBookDepthEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getPartialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
-    return getPartialBookDepth(List.of(symbol), depth, updateSpeed, onEvent);
+  public WebSocketSessionFacade partialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
+    return partialBookDepth(List.of(symbol), depth, updateSpeed, onEvent);
   }
 
   @Override
-  public WebSocketSessionFacade getDepthUpdates(List<String> symbols, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent) {
+  public WebSocketSessionFacade depthUpdates(List<String> symbols, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent) {
     final var sessionUuid = randomUUID();
     createStream(symbols, List.of(updateSpeed.getId()), DepthUpdateEvent.class, false, onEvent, sessionUuid).subscribe();
     return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
   }
 
   @Override
-  public WebSocketSessionFacade getDepthUpdates(String symbol, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent) {
-    return getDepthUpdates(List.of(symbol), updateSpeed, onEvent);
+  public WebSocketSessionFacade depthUpdates(String symbol, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent) {
+    return depthUpdates(List.of(symbol), updateSpeed, onEvent);
   }
 
   private <T> Mono<Void> createStream(List<String> symbols, List<String> additionalParams, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {

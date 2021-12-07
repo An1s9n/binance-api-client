@@ -18,24 +18,24 @@ import java.util.function.Consumer;
 
 public interface BinanceApiWebSocketClient {
 
-  WebSocketSessionFacade getAggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent);
-  WebSocketSessionFacade getAggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent);
-  WebSocketSessionFacade getTrades(List<String> symbols, Consumer<? super TradeEvent> onEvent);
-  WebSocketSessionFacade getTrades(String symbol, Consumer<? super TradeEvent> onEvent);
-  WebSocketSessionFacade getKlines(List<String> symbols, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent);
-  WebSocketSessionFacade getKlines(String symbol, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent);
-  WebSocketSessionFacade getMiniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent);
-  WebSocketSessionFacade getMiniTicker24Hr(String symbol, Consumer<? super MiniTicker24HrEvent> onEvent);
-  WebSocketSessionFacade getMiniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent);
-  WebSocketSessionFacade getTicker24Hr(List<String> symbols, Consumer<? super Ticker24HrEvent> onEvent);
-  WebSocketSessionFacade getTicker24Hr(String symbol, Consumer<? super Ticker24HrEvent> onEvent);
-  WebSocketSessionFacade getTicker24Hr(Consumer<? super Ticker24HrEvent> onEvent);
-  WebSocketSessionFacade getBookTicker(List<String> symbols, Consumer<? super BookTickerEvent> onEvent);
-  WebSocketSessionFacade getBookTicker(String symbol, Consumer<? super BookTickerEvent> onEvent);
-  WebSocketSessionFacade getBookTicker(Consumer<? super BookTickerEvent> onEvent);
-  WebSocketSessionFacade getPartialBookDepth(List<String> symbols, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent);
-  WebSocketSessionFacade getPartialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent);
-  WebSocketSessionFacade getDepthUpdates(List<String> symbols, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent);
-  WebSocketSessionFacade getDepthUpdates(String symbol, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent);
+  WebSocketSessionFacade aggregateTrades(List<String> symbols, Consumer<? super AggregateTradeEvent> onEvent);
+  WebSocketSessionFacade aggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent);
+  WebSocketSessionFacade trades(List<String> symbols, Consumer<? super TradeEvent> onEvent);
+  WebSocketSessionFacade trades(String symbol, Consumer<? super TradeEvent> onEvent);
+  WebSocketSessionFacade klines(List<String> symbols, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent);
+  WebSocketSessionFacade klines(String symbol, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent);
+  WebSocketSessionFacade miniTicker24Hr(List<String> symbols, Consumer<? super MiniTicker24HrEvent> onEvent);
+  WebSocketSessionFacade miniTicker24Hr(String symbol, Consumer<? super MiniTicker24HrEvent> onEvent);
+  WebSocketSessionFacade miniTicker24Hr(Consumer<? super MiniTicker24HrEvent> onEvent);
+  WebSocketSessionFacade ticker24Hr(List<String> symbols, Consumer<? super Ticker24HrEvent> onEvent);
+  WebSocketSessionFacade ticker24Hr(String symbol, Consumer<? super Ticker24HrEvent> onEvent);
+  WebSocketSessionFacade ticker24Hr(Consumer<? super Ticker24HrEvent> onEvent);
+  WebSocketSessionFacade bookTicker(List<String> symbols, Consumer<? super BookTickerEvent> onEvent);
+  WebSocketSessionFacade bookTicker(String symbol, Consumer<? super BookTickerEvent> onEvent);
+  WebSocketSessionFacade bookTicker(Consumer<? super BookTickerEvent> onEvent);
+  WebSocketSessionFacade partialBookDepth(List<String> symbols, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent);
+  WebSocketSessionFacade partialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent);
+  WebSocketSessionFacade depthUpdates(List<String> symbols, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent);
+  WebSocketSessionFacade depthUpdates(String symbol, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent);
 
 }
