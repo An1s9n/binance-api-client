@@ -4,6 +4,7 @@ import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.BookTickerEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.Depth;
+import ru.an1s9n.binanceapiclient.model.websocket.DepthUpdateEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.MiniTicker24HrEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.PartialBookDepthEvent;
@@ -34,5 +35,7 @@ public interface BinanceApiWebSocketClient {
   WebSocketSessionFacade getBookTicker(Consumer<? super BookTickerEvent> onEvent);
   WebSocketSessionFacade getPartialBookDepth(List<String> symbols, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent);
   WebSocketSessionFacade getPartialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent);
+  WebSocketSessionFacade getDepthUpdates(List<String> symbols, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent);
+  WebSocketSessionFacade getDepthUpdates(String symbol, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent);
 
 }

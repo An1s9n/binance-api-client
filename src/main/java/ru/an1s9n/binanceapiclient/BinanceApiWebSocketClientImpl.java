@@ -15,6 +15,7 @@ import ru.an1s9n.binanceapiclient.model.market.KlineInterval;
 import ru.an1s9n.binanceapiclient.model.websocket.AggregateTradeEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.BookTickerEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.Depth;
+import ru.an1s9n.binanceapiclient.model.websocket.DepthUpdateEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.KlineEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.MiniTicker24HrEvent;
 import ru.an1s9n.binanceapiclient.model.websocket.PartialBookDepthEvent;
@@ -150,6 +151,18 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
   @Override
   public WebSocketSessionFacade getPartialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
     return getPartialBookDepth(List.of(symbol), depth, updateSpeed, onEvent);
+  }
+
+  @Override
+  public WebSocketSessionFacade getDepthUpdates(List<String> symbols, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent) {
+    final var sessionUuid = randomUUID();
+    createStream(symbols, List.of(updateSpeed.getId()), DepthUpdateEvent.class, false, onEvent, sessionUuid).subscribe();
+    return new WebSocketSessionFacadeImpl(sessions, sessionUuid);
+  }
+
+  @Override
+  public WebSocketSessionFacade getDepthUpdates(String symbol, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent) {
+    return getDepthUpdates(List.of(symbol), updateSpeed, onEvent);
   }
 
   private <T> Mono<Void> createStream(List<String> symbols, List<String> additionalParams, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {

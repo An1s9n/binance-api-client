@@ -43,6 +43,7 @@ public class BinanceApiConfig {
     public static final String INDIVIDUAL_SYMBOL_BOOK_TICKER_STREAM_NAME = "%s@bookTicker";
     public static final String ALL_MARKET_BOOK_TICKER_STREAM_NAME = "!bookTicker";
     public static final String PARTIAL_BOOK_DEPTH_STREAM_NAME = "%s@depth%s@%s";
+    public static final String DIFF_DEPTH_STREAM_NAME = "%s@depth@%s";
   }
 
 }
