@@ -50,12 +50,8 @@ public class BinanceApiClientFactory {
     return new BinanceApiSimpleClientImpl(getBinanceApiReactiveClient());
   }
 
-  public static BinanceApiWebSocketClient getBinanceApiWebSocketClient(String apiKey, String secret) {
-    return new BinanceApiWebSocketClientImpl(webSocketClient, mapper, apiKey, secret);
-  }
-
   public static BinanceApiWebSocketClient getBinanceApiWebSocketClient() {
-    return new BinanceApiWebSocketClientImpl(webSocketClient, mapper, null, null);
+    return new BinanceApiWebSocketClientImpl(webSocketClient, mapper);
   }
 
 }

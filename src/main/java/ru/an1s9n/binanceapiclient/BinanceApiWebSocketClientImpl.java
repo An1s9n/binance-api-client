@@ -44,8 +44,6 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   private final WebSocketClient webSocketClient;
   private final ObjectMapper mapper;
-  private final String apiKey;
-  private final String secret;
   private final Map<UUID, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
   @Override
