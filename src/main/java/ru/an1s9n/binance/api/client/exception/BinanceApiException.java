@@ -13,7 +13,7 @@ public class BinanceApiException extends RuntimeException {
   private final BinanceApiError error;
 
   public BinanceApiException(int httpStatus, BinanceApiError error) {
-    super(error.getMsg());
+    super(error.msg());
     this.httpStatus = httpStatus;
     this.error = error;
   }
