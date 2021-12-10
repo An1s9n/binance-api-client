@@ -15,9 +15,7 @@
     <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     <maven.compiler.release>17</maven.compiler.release>
     <!--SPRING-->
-    <spring-boot-dependencies.version>2.5.5</spring-boot-dependencies.version>
-    <!--UTIL-->
-    <lombok.version>1.18.22</lombok.version>
+    <spring-boot-dependencies.version>2.6.0</spring-boot-dependencies.version>
   </properties>
 
   <dependencies>
@@ -35,7 +33,6 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
