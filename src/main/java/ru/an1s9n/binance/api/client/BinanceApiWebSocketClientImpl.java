@@ -216,7 +216,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     return "/" + symbols
       .stream()
       .map(symbol -> streamNameFormat.formatted(symbol, "%s", "%s"))
-      .map(streamNameFormatWithSymbol ->  streamNameFormatWithSymbol.formatted(additionalParams.toArray()))
+      .map(streamNameFormatWithSymbol -> streamNameFormatWithSymbol.formatted(additionalParams.toArray()))
       .collect(Collectors.joining("/"));
   }
 

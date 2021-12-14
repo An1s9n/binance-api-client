@@ -23,7 +23,7 @@ public interface BinanceApiSimpleClient {
   OrderBook getOrderBook(String symbol, Integer limit);
   List<TradeItem> getRecentTrades(String symbol, Integer limit);
   List<TradeItem> getHistoricalTrades(String symbol, Integer limit, Long fromId);
-  List<AggregateTradeItem> getAggregateTrades (String symbol, Long fromId, Long startTime, Long endTime, Integer limit);
+  List<AggregateTradeItem> getAggregateTrades(String symbol, Long fromId, Long startTime, Long endTime, Integer limit);
   List<Kline> getKlines(String symbol, KlineInterval interval, Long startTime, Long endTime, Integer limit);
   AveragePrice getAveragePrice(String symbol);
   List<Ticker24HrStatistics> get24HrTickerStatistics();
