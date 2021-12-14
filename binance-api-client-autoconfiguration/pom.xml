@@ -10,6 +10,6 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>biance-api-client-autoconfiguration</artifactId>
+  <artifactId>binance-api-client-autoconfiguration</artifactId>
 
 </project>

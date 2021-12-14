@@ -11,7 +11,7 @@
 
   <modules>
     <module>binance-api-client</module>
-    <module>biance-api-client-autoconfiguration</module>
+    <module>binance-api-client-autoconfiguration</module>
     <module>binance-api-client-spring-boot-starter</module>
   </modules>
 
