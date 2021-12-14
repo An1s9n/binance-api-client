@@ -5,11 +5,19 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ru.an1s9n</groupId>
-  <artifactId>binance-api-client</artifactId>
-  <version>1.0.0</version>
+  <artifactId>binance-api-client-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>${revision}</version>
+
+  <modules>
+    <module>binance-api-client</module>
+    <module>biance-api-client-autoconfiguration</module>
+    <module>binance-api-client-spring-boot-starter</module>
+  </modules>
 
   <properties>
     <!--GENERAL-->
+    <revision>1.0.0</revision>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!--COMPILER-->
     <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
@@ -17,25 +25,6 @@
     <!--SPRING-->
     <spring-boot-dependencies.version>2.6.0</spring-boot-dependencies.version>
   </properties>
-
-  <dependencies>
-    <!--SPRING-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webflux</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-websocket</artifactId>
-    </dependency>
-
-    <!--UTIL-->
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
 
   <dependencyManagement>
     <dependencies>
