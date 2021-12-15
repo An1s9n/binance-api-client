@@ -10,18 +10,25 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>binance-api-client-spring-boot-starter</artifactId>
+  <artifactId>binance-api-client-autoconfigure</artifactId>
 
   <dependencies>
     <dependency>
-      <groupId>ru.an1s9n</groupId>
-      <artifactId>binance-api-client-autoconfigure</artifactId>
-      <version>${parent.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
     </dependency>
     <dependency>
       <groupId>ru.an1s9n</groupId>
       <artifactId>binance-api-client</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.version}</version>
+      <optional>true</optional>
+    </dependency>
+
+    <!--UTIL-->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
