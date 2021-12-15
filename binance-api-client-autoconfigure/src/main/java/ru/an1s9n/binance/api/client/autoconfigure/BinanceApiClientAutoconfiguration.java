@@ -10,8 +10,8 @@ import ru.an1s9n.binance.api.client.BinanceApiClientFactory;
 import ru.an1s9n.binance.api.client.BinanceApiWebSocketClient;
 
 @Configuration
-@ConfigurationPropertiesScan
 @ConditionalOnClass(BinanceApiClientFactory.class)
+@ConfigurationPropertiesScan
 @RequiredArgsConstructor
 public class BinanceApiClientAutoconfiguration {
 

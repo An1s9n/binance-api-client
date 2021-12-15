@@ -6,8 +6,8 @@
 
   <groupId>ru.an1s9n</groupId>
   <artifactId>binance-api-client-parent</artifactId>
-  <packaging>pom</packaging>
   <version>${revision}</version>
+  <packaging>pom</packaging>
 
   <modules>
     <module>binance-api-client</module>

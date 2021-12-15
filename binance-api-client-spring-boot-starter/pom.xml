@@ -16,12 +16,12 @@
     <dependency>
       <groupId>ru.an1s9n</groupId>
       <artifactId>binance-api-client-autoconfigure</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>ru.an1s9n</groupId>
       <artifactId>binance-api-client</artifactId>
-      <version>${parent.version}</version>
+      <version>${project.version}</version>
     </dependency>
   </dependencies>
 
