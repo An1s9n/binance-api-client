@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ru.an1s9n</groupId>
-  <artifactId>binance-api-client-parent</artifactId>
+  <artifactId>binance-api-client</artifactId>
   <version>${revision}</version>
   <packaging>pom</packaging>
 
   <modules>
-    <module>binance-api-client</module>
+    <module>binance-api-client-core</module>
     <module>binance-api-client-autoconfigure</module>
     <module>binance-api-client-spring-boot-starter</module>
   </modules>

@@ -6,7 +6,7 @@
 
   <parent>
     <groupId>ru.an1s9n</groupId>
-    <artifactId>binance-api-client-parent</artifactId>
+    <artifactId>binance-api-client</artifactId>
     <version>${revision}</version>
   </parent>
 
