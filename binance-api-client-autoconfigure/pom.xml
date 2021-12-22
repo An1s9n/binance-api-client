@@ -20,7 +20,7 @@
     <dependency>
       <groupId>ru.an1s9n</groupId>
       <artifactId>binance-api-client-core</artifactId>
-      <version>${project.version}</version>
+      <version>${revision}</version>
       <optional>true</optional>
     </dependency>
 

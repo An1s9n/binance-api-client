@@ -22,6 +22,7 @@
     <!--COMPILER-->
     <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
     <maven.compiler.release>17</maven.compiler.release>
+    <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
     <!--SPRING-->
     <spring-boot-dependencies.version>2.6.0</spring-boot-dependencies.version>
   </properties>
@@ -39,6 +40,7 @@
   </dependencyManagement>
 
   <build>
+
     <pluginManagement>
       <plugins>
         <plugin>
@@ -46,8 +48,37 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>${maven.compiler.plugin.version}</version>
         </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>flatten-maven-plugin</artifactId>
+          <version>${flatten-maven-plugin.version}</version>
+        </plugin>
       </plugins>
     </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>flatten.flatten</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+
   </build>
 
 </project>
