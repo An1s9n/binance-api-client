@@ -54,7 +54,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade aggregateTrades(String symbol, Consumer<? super AggregateTradeEvent> onEvent) {
-    return aggregateTrades(List.of(symbol), onEvent);
+    return aggregateTrades(safeListOf(symbol), onEvent);
   }
 
   @Override
@@ -66,7 +66,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade trades(String symbol, Consumer<? super TradeEvent> onEvent) {
-    return trades(List.of(symbol), onEvent);
+    return trades(safeListOf(symbol), onEvent);
   }
 
   @Override
@@ -78,7 +78,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade klines(String symbol, KlineInterval klineInterval, Consumer<? super KlineEvent> onEvent) {
-    return klines(List.of(symbol), klineInterval, onEvent);
+    return klines(safeListOf(symbol), klineInterval, onEvent);
   }
 
   @Override
@@ -90,7 +90,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade miniTicker24Hr(String symbol, Consumer<? super MiniTicker24HrEvent> onEvent) {
-    return miniTicker24Hr(List.of(symbol), onEvent);
+    return miniTicker24Hr(safeListOf(symbol), onEvent);
   }
 
   @Override
@@ -109,7 +109,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade ticker24Hr(String symbol, Consumer<? super Ticker24HrEvent> onEvent) {
-    return ticker24Hr(List.of(symbol), onEvent);
+    return ticker24Hr(safeListOf(symbol), onEvent);
   }
 
   @Override
@@ -128,7 +128,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade bookTicker(String symbol, Consumer<? super BookTickerEvent> onEvent) {
-    return bookTicker(List.of(symbol), onEvent);
+    return bookTicker(safeListOf(symbol), onEvent);
   }
 
   @Override
@@ -147,7 +147,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade partialBookDepth(String symbol, Depth depth, UpdateSpeed updateSpeed, Consumer<? super PartialBookDepthEvent> onEvent) {
-    return partialBookDepth(List.of(symbol), depth, updateSpeed, onEvent);
+    return partialBookDepth(safeListOf(symbol), depth, updateSpeed, onEvent);
   }
 
   @Override
@@ -159,7 +159,7 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
 
   @Override
   public WebSocketSessionFacade depthUpdates(String symbol, UpdateSpeed updateSpeed, Consumer<? super DepthUpdateEvent> onEvent) {
-    return depthUpdates(List.of(symbol), updateSpeed, onEvent);
+    return depthUpdates(safeListOf(symbol), updateSpeed, onEvent);
   }
 
   private <T> Mono<Void> createStream(List<String> symbols, List<String> additionalParams, Class<T> eventType, boolean allMarket, Consumer<? super T> onEvent, UUID sessionUuid) {
@@ -225,6 +225,10 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient 
     } catch(URISyntaxException e) {
       return null;
     }
+  }
+
+  private List<String> safeListOf(String symbol) {
+    return symbol.isBlank() ? List.of() : List.of(symbol);
   }
 
 }
